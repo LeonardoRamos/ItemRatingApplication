@@ -11,14 +11,14 @@ import com.uff.item.rating.application.domain.User;
 public class RatingUserBasedStrategy extends AbstractRatingPrediction implements RatingPredictionStrategy {
 
 	private BigDecimal calculateSimilarity(User user, User otherUser, String itemName) {
-		BigDecimal upperResult = calculateUpperValue(user, otherUser, itemName);
-		BigDecimal firstLowerResult = calculateLowerValue(user, itemName);
-		BigDecimal secondLowerResult = calculateLowerValue(otherUser, itemName);
+		BigDecimal upperResult = calculateUpperValue(user, otherUser);
+		BigDecimal firstLowerResult = calculateLowerValue(user);
+		BigDecimal secondLowerResult = calculateLowerValue(otherUser);
 		
 		return upperResult.divide(firstLowerResult.multiply(secondLowerResult), 3, RoundingMode.HALF_EVEN);
 	}
 
-	private BigDecimal calculateUpperValue(User user, User otherUser, String itemName) {
+	private BigDecimal calculateUpperValue(User user, User otherUser) {
 		BigDecimal result = BigDecimal.ZERO;
 		
 		for (Item item : user.getItemRatings()) {
@@ -40,7 +40,7 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 		return result;
 	}
 	
-	private BigDecimal calculateLowerValue(User user, String itemName) {
+	private BigDecimal calculateLowerValue(User user) {
 		BigDecimal result = BigDecimal.ZERO;
 		
 		for (Item item : user.getItemRatings()) {
