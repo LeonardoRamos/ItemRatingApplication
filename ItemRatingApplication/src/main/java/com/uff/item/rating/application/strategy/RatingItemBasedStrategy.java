@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.uff.item.rating.application.domain.Item;
+import com.uff.item.rating.application.domain.RatingRange;
 import com.uff.item.rating.application.domain.User;
 
 public class RatingItemBasedStrategy extends AbstractRatingPrediction implements RatingPredictionStrategy {
@@ -23,7 +24,7 @@ public class RatingItemBasedStrategy extends AbstractRatingPrediction implements
 		for (User user : users) {
 			String itemRating = user.getRatingByItem(itemName);
 			
-			if (!Item.NOT_RATED.equals(itemRating)) {
+			if (!RatingRange.NOT_RATED.getRating().equals(itemRating)) {
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				
 				result = result.add((new BigDecimal(itemRating)
@@ -42,7 +43,9 @@ public class RatingItemBasedStrategy extends AbstractRatingPrediction implements
 			String itemRating = user.getRatingByItem(itemName);
 			String otherItemRating = user.getRatingByItem(otherItemName);
 			
-			if (!Item.NOT_RATED.equals(itemRating) && !Item.NOT_RATED.equals(otherItemRating)) {
+			if (!RatingRange.NOT_RATED.getRating().equals(itemRating) && 
+				!RatingRange.NOT_RATED.getRating().equals(otherItemRating)) {
+				
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				
 				result = result.add((new BigDecimal(itemRating)
@@ -61,7 +64,7 @@ public class RatingItemBasedStrategy extends AbstractRatingPrediction implements
 		BigDecimal lowerValue = BigDecimal.ZERO;
 		
 		for (Item otherItem : user.getItemRatings()) {
-			if (!itemName.equals(otherItem.getName()) && !Item.NOT_RATED.equals(otherItem.getRating())) {
+			if (!itemName.equals(otherItem.getName()) && !RatingRange.NOT_RATED.getRating().equals(otherItem.getRating())) {
 				BigDecimal similarity = calculateSimilarity(users, itemName, otherItem.getName());
 				
 				upperValue = upperValue.add(similarity.multiply(new BigDecimal(otherItem.getRating())));

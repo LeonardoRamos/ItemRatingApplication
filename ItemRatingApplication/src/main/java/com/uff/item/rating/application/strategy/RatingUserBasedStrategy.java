@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.uff.item.rating.application.domain.Item;
+import com.uff.item.rating.application.domain.RatingRange;
 import com.uff.item.rating.application.domain.User;
 
 public class RatingUserBasedStrategy extends AbstractRatingPrediction implements RatingPredictionStrategy {
@@ -27,7 +28,7 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 			
 			String otherItemRating = otherUser.getRatingByItem(item.getName());
 			
-			if (!Item.NOT_RATED.equals(otherItemRating)) {
+			if (!RatingRange.NOT_RATED.getRating().equals(otherItemRating)) {
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				BigDecimal otherUserAverageRating = otherUser.calculateAverageRating();
 				
@@ -44,7 +45,7 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 		BigDecimal result = BigDecimal.ZERO;
 		
 		for (Item item : user.getItemRatings()) {
-			if (!Item.NOT_RATED.equals(item.getRating())) {
+			if (!RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				result = result.add((new BigDecimal(item.getRating()).subtract(userAverageRating)).pow(2));
 			}

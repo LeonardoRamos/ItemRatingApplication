@@ -51,7 +51,7 @@ public class User {
 		BigDecimal sumRatings = BigDecimal.ZERO;
 		
 		for (Item item : getItemRatings()) {
-			if (!Item.NOT_RATED.equals(item.getRating())) {
+			if (!RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
 				sumRatings = sumRatings.add(new BigDecimal(item.getRating()));
 			}
 		}
@@ -63,7 +63,7 @@ public class User {
 		Integer total = 0;
 		
 		for (Item item : getItemRatings()) {
-			if (!Item.NOT_RATED.equals(item.getRating())) {
+			if (!RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
 				total++;
 			}
 		}
@@ -75,7 +75,7 @@ public class User {
 		for (Item item : getItemRatings()) {
 			for (Item otherItem : otherUser.getItemRatings()) {
 				if (item.getName().equals(otherItem.getName()) && !item.getName().equals(itemName) &&
-				   (Item.NOT_RATED.equals(otherItem.getRating()) || Item.NOT_RATED.equals(item.getRating()))) {
+				   (RatingRange.NOT_RATED.getRating().equals(otherItem.getRating()) || RatingRange.NOT_RATED.getRating().equals(item.getRating()))) {
 					
 					return Boolean.FALSE;
 				}
@@ -87,7 +87,7 @@ public class User {
 	
 	public Boolean hasRatedItem(String itemName) {
 		for (Item item : getItemRatings()) {
-			if (itemName.equals(item.getName()) && !Item.NOT_RATED.equals(item.getRating())) {
+			if (itemName.equals(item.getName()) && !RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
 				return Boolean.TRUE;
 			}
 		}

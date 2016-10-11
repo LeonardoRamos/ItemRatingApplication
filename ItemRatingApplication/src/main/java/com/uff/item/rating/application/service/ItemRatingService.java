@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.uff.item.rating.application.dao.ItemRatingDao;
 import com.uff.item.rating.application.domain.Item;
+import com.uff.item.rating.application.domain.RatingRange;
 import com.uff.item.rating.application.domain.User;
 import com.uff.item.rating.application.exception.InvalidPredictionStrategyException;
 import com.uff.item.rating.application.strategy.PredictionType;
@@ -51,7 +52,7 @@ public class ItemRatingService {
 			return RATING_NOT_FOUND_MESSAGE;
 		}
 		
-		if (!Item.NOT_RATED.equals(rating)) {
+		if (!RatingRange.NOT_RATED.getRating().equals(rating)) {
 			StringBuilder ratingMessage = new StringBuilder("Rating: ");
 			return ratingMessage.append(rating).toString();
 		}
