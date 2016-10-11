@@ -52,11 +52,11 @@ public class User {
 		
 		for (Item item : getItemRatings()) {
 			if (!Item.NOT_RATED.equals(item.getRating())) {
-				sumRatings.add(BigDecimal.valueOf(Double.valueOf(item.getRating())));
+				sumRatings = sumRatings.add(new BigDecimal(item.getRating()));
 			}
 		}
 		
-		return sumRatings.divide(BigDecimal.valueOf(getTotalValidRatings()), RoundingMode.HALF_EVEN);
+		return sumRatings.divide(BigDecimal.valueOf(getTotalValidRatings()), 3, RoundingMode.HALF_EVEN);
 	}
 	
 	public Integer getTotalValidRatings() {
@@ -93,16 +93,6 @@ public class User {
 		}
 		
 		return Boolean.FALSE;
-	}
-	
-	public Item getItemByName(String itemName) {
-		for (Item item : getItemRatings()) {
-			if (itemName.equals(item.getName())) {
-				return item;
-			}
-		}
-
-		return null;
 	}
 	
 	public static UserBuilder builder() {

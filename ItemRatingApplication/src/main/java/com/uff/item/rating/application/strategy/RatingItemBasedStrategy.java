@@ -7,17 +7,17 @@ import java.util.List;
 import com.uff.item.rating.application.domain.Item;
 import com.uff.item.rating.application.domain.User;
 
-public class RatingItemBasedStrategy implements RatingPredictionStrategy {
+public class RatingItemBasedStrategy extends AbstractRatingPrediction implements RatingPredictionStrategy {
 
 	private BigDecimal calculateSimilarity(List<User> users, String itemName, String otherItemName) {
 		BigDecimal upperResult = calculateUpperValue(users, itemName, otherItemName);
-		BigDecimal itemEuclidianLength = calculateItemEuclidianLength(users, itemName);
-		BigDecimal otherItemEuclidianLength = calculateItemEuclidianLength(users, otherItemName);
+		BigDecimal itemCosineMeasure = calculateCosineSimilarityMeasure(users, itemName);
+		BigDecimal otherItemCosineMeasure = calculateCosineSimilarityMeasure(users, otherItemName);
 		
-		return upperResult.divide(itemEuclidianLength.multiply(otherItemEuclidianLength), RoundingMode.HALF_EVEN);
+		return upperResult.divide(itemCosineMeasure.multiply(otherItemCosineMeasure), 3, RoundingMode.HALF_EVEN);
 	}
 
-	private BigDecimal calculateItemEuclidianLength(List<User> users, String itemName) {
+	private BigDecimal calculateCosineSimilarityMeasure(List<User> users, String itemName) {
 		BigDecimal result = BigDecimal.ZERO;
 		
 		for (User user : users) {
@@ -26,13 +26,13 @@ public class RatingItemBasedStrategy implements RatingPredictionStrategy {
 			if (!Item.NOT_RATED.equals(itemRating)) {
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				
-				result = result.add((BigDecimal.valueOf(Double.valueOf(itemRating))
+				result = result.add((new BigDecimal(itemRating)
 							   .subtract(userAverageRating))
-							   .multiply(BigDecimal.valueOf(Double.valueOf(itemRating))));
+							   .pow(2));
 			}
 		}
 		
-		return result;
+		return BigDecimal.valueOf(Math.sqrt(result.doubleValue()));
 	}
 
 	private BigDecimal calculateUpperValue(List<User> users, String itemName, String otherItemName) {
@@ -45,14 +45,14 @@ public class RatingItemBasedStrategy implements RatingPredictionStrategy {
 			if (!Item.NOT_RATED.equals(itemRating) && !Item.NOT_RATED.equals(otherItemRating)) {
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				
-				result = result.add((BigDecimal.valueOf(Double.valueOf(itemRating))
+				result = result.add((new BigDecimal(itemRating)
 							   .subtract(userAverageRating))
-							   .multiply((BigDecimal.valueOf(Double.valueOf(otherItemRating))
-							   .subtract(userAverageRating))));
+							   .multiply(new BigDecimal(otherItemRating)
+							   .subtract(userAverageRating)));
 			}
 		}
 		
-		return BigDecimal.valueOf(Math.sqrt(result.doubleValue()));
+		return result;
 	}
 	
 	@Override
@@ -64,12 +64,12 @@ public class RatingItemBasedStrategy implements RatingPredictionStrategy {
 			if (!itemName.equals(otherItem.getName()) && !Item.NOT_RATED.equals(otherItem.getRating())) {
 				BigDecimal similarity = calculateSimilarity(users, itemName, otherItem.getName());
 				
-				upperValue = upperValue.add(similarity.multiply(BigDecimal.valueOf(Double.valueOf(otherItem.getRating()))));
+				upperValue = upperValue.add(similarity.multiply(new BigDecimal(otherItem.getRating())));
 				lowerValue = lowerValue.add(similarity);
 			}
 		}
 		
-		return upperValue.divide(lowerValue, RoundingMode.HALF_EVEN).toString();
+		return processPredictionResult(upperValue.divide(lowerValue, 3, RoundingMode.HALF_EVEN));
 	}
 	
 }

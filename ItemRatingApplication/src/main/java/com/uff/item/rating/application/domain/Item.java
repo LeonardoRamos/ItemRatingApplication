@@ -6,6 +6,8 @@ public class Item {
 	private String rating;
 	
 	public static final String NOT_RATED = "?";
+	public static final Integer MAX_RATING = 5;
+	public static final Integer MIN_RATING = 1;
 	
 	public Item() {}
 	
