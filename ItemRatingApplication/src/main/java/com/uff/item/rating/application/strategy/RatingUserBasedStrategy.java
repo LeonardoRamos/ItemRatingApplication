@@ -12,8 +12,8 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 
 	private BigDecimal calculateSimilarity(User user, User otherUser, String itemName) {
 		BigDecimal upperResult = calculateUpperValue(user, otherUser, itemName);
-		BigDecimal firstLowerResult = calculateLowerValue(user);
-		BigDecimal secondLowerResult = calculateLowerValue(otherUser);
+		BigDecimal firstLowerResult = calculateLowerValue(user, itemName);
+		BigDecimal secondLowerResult = calculateLowerValue(otherUser, itemName);
 		
 		return upperResult.divide(firstLowerResult.multiply(secondLowerResult), 3, RoundingMode.HALF_EVEN);
 	}
@@ -22,13 +22,12 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 		BigDecimal result = BigDecimal.ZERO;
 		
 		for (Item item : user.getItemRatings()) {
-			if (itemName.equals(item.getName())) {
-				continue;
-			}
-			
+			String itemRating = user.getRatingByItem(item.getName());
 			String otherItemRating = otherUser.getRatingByItem(item.getName());
 			
-			if (!RatingRange.NOT_RATED.getRating().equals(otherItemRating)) {
+			if (!RatingRange.NOT_RATED.getRating().equals(otherItemRating) &&
+				!RatingRange.NOT_RATED.getRating().equals(itemRating)) {
+				
 				BigDecimal userAverageRating = user.calculateAverageRating();
 				BigDecimal otherUserAverageRating = otherUser.calculateAverageRating();
 				
@@ -41,7 +40,7 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 		return result;
 	}
 	
-	private BigDecimal calculateLowerValue(User user) {
+	private BigDecimal calculateLowerValue(User user, String itemName) {
 		BigDecimal result = BigDecimal.ZERO;
 		
 		for (Item item : user.getItemRatings()) {
