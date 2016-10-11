@@ -8,6 +8,8 @@ import com.uff.item.rating.application.strategy.RatingUserBasedStrategy;
 
 public class RatingPredictionStrategyFactory {
 
+	private static final String INVALID_STRATEGY_MESSAGE = "Invalid prediction Strategy.";
+
 	public static RatingPredictionStrategy getPredictionStrategy(PredictionType predictionType) throws InvalidPredictionStrategyException {
 		if (PredictionType.ITEM_BASED.equals(predictionType)) {
 			return new RatingItemBasedStrategy();
@@ -17,7 +19,7 @@ public class RatingPredictionStrategyFactory {
 			return new RatingUserBasedStrategy();
 		}
 		
-		throw new InvalidPredictionStrategyException("Invalid prediction Strategy.");
+		throw new InvalidPredictionStrategyException(INVALID_STRATEGY_MESSAGE);
 	}
 
 }
