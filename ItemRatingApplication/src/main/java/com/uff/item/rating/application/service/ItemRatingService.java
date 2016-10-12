@@ -145,7 +145,7 @@ public class ItemRatingService {
 		
 		for (User user : users) {
 			for (Item item : user.getItemRatings()) {
-				if (itemName.equals(item.getName())) {
+				if (itemName.equals(item.getName()) && !RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
 					total++;
 				}
 			}

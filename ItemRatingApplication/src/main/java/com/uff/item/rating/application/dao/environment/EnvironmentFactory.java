@@ -5,7 +5,7 @@ public class EnvironmentFactory {
 	public static final String TEST_SYSTEM_PARAMETER = "testEnvironment";
 	public static final String IS_TEST_VALUE = "true";
 	protected static final String PROPERTIES_PATH = "src/main/resources/application.properties";
-	protected static final String PROPERTIES_TEST_PATH = "src/test/resources/application.properties";
+	protected static final String PROPERTIES_TEST_PATH = "src/test/resources/test.properties";
 	
 	public static String getEnvironmentPath() {
 		String isTestEnvironment = System.getProperty(TEST_SYSTEM_PARAMETER);
