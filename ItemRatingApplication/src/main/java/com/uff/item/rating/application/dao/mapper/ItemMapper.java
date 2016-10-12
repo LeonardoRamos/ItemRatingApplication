@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.uff.item.rating.application.bundle.MessageBundle;
 import com.uff.item.rating.application.domain.Item;
 
 public class ItemMapper extends CsvMapper {
 	
 	private static final Logger log = Logger.getLogger(ItemMapper.class.getName());
 
-	private static final String CAN_NOT_MAP_MESSAGE = "Can not map empty data.";
-
 	public static List<Item> mapItems(String data) throws Exception {
 		if (data == null) {
-			log.warning(CAN_NOT_MAP_MESSAGE);
+			log.warning(MessageBundle.CAN_NOT_MAP_MESSAGE);
 			return null;
 		}
 		

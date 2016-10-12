@@ -3,6 +3,7 @@ package com.uff.item.rating.application.service;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.uff.item.rating.application.bundle.MessageBundle;
 import com.uff.item.rating.application.dao.ItemRatingDao;
 import com.uff.item.rating.application.domain.Item;
 import com.uff.item.rating.application.domain.RatingRange;
@@ -17,10 +18,6 @@ public class ItemRatingService {
 
 	private static final Logger log = Logger.getLogger(ItemRatingService.class.getName());
 
-	private static final String USER_NOT_FOUND_MESSAGE = "User not found";
-	private static final String STARTING_INSTANCE_MESSAGE = "Starting instance of ItemRatingService Class.";
-	private static final String RATING_NOT_FOUND_MESSAGE = "Rating not found for input given.";
-
 	private RatingPredictionStrategy ratingPredictionStrategy;
 	private ItemRatingDao itemRatingDao;
 	
@@ -29,7 +26,6 @@ public class ItemRatingService {
     }
 		
 	private ItemRatingService() {
-		log.info(STARTING_INSTANCE_MESSAGE);
 		itemRatingDao = ItemRatingDao.getInstance();
 	}
 	
@@ -43,17 +39,17 @@ public class ItemRatingService {
 		User user = getUserByName(users, userName);
 		
 		if (user == null) {
-			return USER_NOT_FOUND_MESSAGE;
+			return MessageBundle.USER_NOT_FOUND_MESSAGE;
 		}
 		
 		String rating = user.getRatingByItem(itemName);
 		
 		if (rating == null) {
-			return RATING_NOT_FOUND_MESSAGE;
+			return MessageBundle.RATING_NOT_FOUND_MESSAGE;
 		}
 		
 		if (!RatingRange.NOT_RATED.getRating().equals(rating)) {
-			StringBuilder ratingMessage = new StringBuilder("Rating: ");
+			StringBuilder ratingMessage = new StringBuilder(MessageBundle.RATING_MESSAGE);
 			return ratingMessage.append(rating).toString();
 		}
 		
@@ -74,47 +70,31 @@ public class ItemRatingService {
 	private void buildPredictionsDetails(User user, String itemName, List<User> users, StringBuilder ratingDetails) {
 		try {
 			ratingPredictionStrategy = RatingPredictionStrategyFactory.getPredictionStrategy(PredictionType.USER_BASED);
-			ratingDetails.append("pred(rxy) using user based approach: ");
-			ratingDetails.append(ratingPredictionStrategy.predictRating(users, user, itemName));
-			ratingDetails.append("\n");
+			ratingDetails.append(String.format(MessageBundle.PRED_USER_BASED_MESSAGE, 
+								 ratingPredictionStrategy.predictRating(users, user, itemName)));
 			
 			ratingPredictionStrategy = RatingPredictionStrategyFactory.getPredictionStrategy(PredictionType.ITEM_BASED);
-			ratingDetails.append("pred(rxy) using item based approach: ");
-			ratingDetails.append(ratingPredictionStrategy.predictRating(users, user, itemName));
-			ratingDetails.append("\n");
+			ratingDetails.append(String.format(MessageBundle.PRED_ITEM_BASED_MESSAGE, 
+					 			 ratingPredictionStrategy.predictRating(users, user, itemName)));
 		}
 		catch (InvalidPredictionStrategyException e) {
-			log.severe("Error while retrieving prediction strategy\n" + StackTraceUtils.getStackTraceAsString(e));
-			ratingDetails.append("Could not predict rating for item '");
-			ratingDetails.append(itemName);
-			ratingDetails.append("'\n");
+			log.severe(MessageBundle.ERROR_PREDICTING_MESSAGE + StackTraceUtils.getStackTraceAsString(e));
+			ratingDetails.append(String.format(MessageBundle.COULD_NOT_PREDICT_MESSAGE, itemName));
 		}
 	}
 
 	private void buildUsersSimilarityDetails(String itemName, List<User> users, User user, StringBuilder ratingDetails) {
-		ratingDetails.append("Total users that rated same items as user '");
-		ratingDetails.append(user.getName());
-		ratingDetails.append("' and rated item '");
-		ratingDetails.append(itemName);
-		ratingDetails.append("': ");
-		ratingDetails.append(getTotalUsersSimilarityForItem(users, user, itemName));
-		ratingDetails.append("\n");
+		ratingDetails.append(String.format(MessageBundle.TOTAL_SIMILAR_USERS_MESSAGE, 
+							 user.getName(), itemName, getTotalUsersSimilarityForItem(users, user, itemName)));
 	}
 
 	private void buildValidRatingsDetails(String userName, User user, StringBuilder ratingDetails) {
-		ratingDetails.append("Total items rated by user '");
-		ratingDetails.append(userName);
-		ratingDetails.append("': ");
-		ratingDetails.append(user.getTotalValidRatings());
-		ratingDetails.append("\n");
+		ratingDetails.append(String.format(MessageBundle.TOTAL_ITEMS_RATED_BY_USER_MESSAGE, userName, user.getTotalValidRatings()));
 	}
 
 	private void buildTotalRatingDetails(String itemName, List<User> users, StringBuilder ratingDetails) {
-		ratingDetails.append("Total users that rated item '");
-		ratingDetails.append(itemName);
-		ratingDetails.append("': ");
-		ratingDetails.append(getTotalRatingForItem(users, itemName));
-		ratingDetails.append("\n");
+		ratingDetails.append(String.format(MessageBundle.TOTAL_RATINGS_FOR_ITEM_MESSAGE, 
+							 itemName, getTotalRatingForItem(users, itemName)));
 	}
 
 	private Integer getTotalUsersSimilarityForItem(List<User> users, User user, String itemName) {

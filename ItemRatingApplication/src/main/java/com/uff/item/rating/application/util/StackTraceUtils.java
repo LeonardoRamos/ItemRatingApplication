@@ -7,7 +7,7 @@ public class StackTraceUtils {
 
 	public static String getStackTraceAsString(Exception e) {
 		StringWriter stringWriter = new StringWriter();
-		
+
 		e.printStackTrace(new PrintWriter(stringWriter));
 		
 		return stringWriter.toString();

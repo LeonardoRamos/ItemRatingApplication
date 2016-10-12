@@ -6,13 +6,10 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.uff.item.rating.application.bundle.MessageBundle;
+
 public class PropertiesLoader {
 	
-	private static final String RECOVER_DATASOURCE_MESSAGE = "Recovering dataSource url attribute";
-	private static final String ERROR_CLOSING_PROPERTIES = "Error while closing properties file\n";
-	private static final String ERROR_LOADING_PROPERTIES = "Error while loading properties\n";
-	private static final String LOAD_PROPERTIES_SUCCESS_MESSAGE = "Application loaded successfully.";
-	private static final String START_LOAD_MESSAGE = "Starting load of properties of application.";
 	protected static final String DATASOURCE_ATTRIBUTE = "dataSource.url";
 	protected static final String DATASOURCE_TEST_ATTRIBUTE = "dataSource.url.test";
 	protected static final String DATASOURCE_TEST_FLAG_ATTRIBUTE = "application.test";
@@ -20,7 +17,7 @@ public class PropertiesLoader {
 	private static final Logger log = Logger.getLogger(PropertiesLoader.class.getName());
 	
 	public static Properties laodProperties(String propertiesPath) {
-		log.info(START_LOAD_MESSAGE);
+		log.info(MessageBundle.START_LOAD_MESSAGE);
 		
 		Properties properties = null;
 		InputStream input = null;
@@ -31,13 +28,13 @@ public class PropertiesLoader {
 			input = new FileInputStream(propertiesPath);
 			properties.load(input);
 			
-			log.info(LOAD_PROPERTIES_SUCCESS_MESSAGE);
+			log.info(MessageBundle.LOAD_PROPERTIES_SUCCESS_MESSAGE);
 			
 			return properties;
 			
 		} 
 		catch (IOException e) {
-			log.severe(ERROR_LOADING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
+			log.severe(MessageBundle.ERROR_LOADING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
 		} 
 		finally {
 			closeInputResource(input);
@@ -52,13 +49,13 @@ public class PropertiesLoader {
 				input.close();
 			} 
 			catch (IOException e) {
-				log.severe(ERROR_CLOSING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
+				log.severe(MessageBundle.ERROR_CLOSING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
 			}
 		}
 	}
 	
 	public static String getDataSourceUrlAttribute(Properties properties) {
-		log.info(RECOVER_DATASOURCE_MESSAGE);
+		log.info(MessageBundle.RECOVER_DATASOURCE_MESSAGE);
 		
 		if (properties == null) {
 			return null;
