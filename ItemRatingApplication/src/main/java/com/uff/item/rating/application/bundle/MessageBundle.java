@@ -42,7 +42,7 @@ public class MessageBundle {
 	public static final String LOAD_PROPERTIES_SUCCESS_MESSAGE = "Application loaded successfully.";
 	public static final String START_LOAD_MESSAGE = "Starting load of properties of application.";
 	
-	//InteRatingView
+	//ItemRatingView
 	public static final String ENTER_INPUT_MESSAGE = "Enter a pair of UserX / ItemY:";
 	
 	//Application
