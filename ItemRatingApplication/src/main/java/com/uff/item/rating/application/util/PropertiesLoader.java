@@ -31,7 +31,6 @@ public class PropertiesLoader {
 			log.info(MessageBundle.LOAD_PROPERTIES_SUCCESS_MESSAGE);
 			
 			return properties;
-			
 		} 
 		catch (IOException e) {
 			log.severe(MessageBundle.ERROR_LOADING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
