@@ -53,7 +53,7 @@ public class ItemRatingDao extends AbstractDao<User> {
 			return usersResult;
 		} 
 		catch (Exception e) {
-			log.severe(MessageBundle.ERROR_READING_FILES + StackTraceUtils.getStackTraceAsString(e));
+			log.severe(String.format(MessageBundle.ERROR_READING_FILES, StackTraceUtils.getStackTraceAsString(e)));
 			return null;
 		}
 		finally {

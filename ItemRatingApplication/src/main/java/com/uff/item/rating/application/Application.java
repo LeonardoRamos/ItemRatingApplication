@@ -12,7 +12,7 @@ public class Application {
 	public static void main(String[] args) {
 		log.info(MessageBundle.STARTING_APP_MESSAGE);
 		
-		ItemRatingView.getInstance(); 
+		ItemRatingView.getInstance().buildView(); 
 		
 		log.info(MessageBundle.EXITING_APP_MESSAGE);
 		System.exit(0);

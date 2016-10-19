@@ -15,14 +15,13 @@ public class ItemRatingView {
 		
 	private ItemRatingView() {
 		itemRatingController = ItemRatingController.getInstance();
-		buildView();
 	}
 	
 	public static ItemRatingView getInstance() {
 		return Loader.instance;
 	}
 	
-	private void buildView() {
+	public void buildView() {
 		Scanner in = new Scanner(System.in);
 		
 		System.out.println(MessageBundle.ENTER_INPUT_MESSAGE);

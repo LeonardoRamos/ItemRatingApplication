@@ -18,6 +18,19 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 		return upperResult.divide(firstLowerResult.multiply(secondLowerResult), 3, RoundingMode.HALF_EVEN);
 	}
 
+	private BigDecimal calculateLowerValue(User user) {
+		BigDecimal result = BigDecimal.ZERO;
+		
+		for (Item item : user.getItemRatings()) {
+			if (!RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
+				BigDecimal userAverageRating = user.calculateAverageRating();
+				result = result.add((new BigDecimal(item.getRating()).subtract(userAverageRating)).pow(2));
+			}
+		}
+		
+		return BigDecimal.valueOf(Math.sqrt(result.doubleValue()));
+	}
+	
 	private BigDecimal calculateUpperValue(User user, User otherUser) {
 		BigDecimal result = BigDecimal.ZERO;
 		
@@ -38,19 +51,6 @@ public class RatingUserBasedStrategy extends AbstractRatingPrediction implements
 		}
 		
 		return result;
-	}
-	
-	private BigDecimal calculateLowerValue(User user) {
-		BigDecimal result = BigDecimal.ZERO;
-		
-		for (Item item : user.getItemRatings()) {
-			if (!RatingRange.NOT_RATED.getRating().equals(item.getRating())) {
-				BigDecimal userAverageRating = user.calculateAverageRating();
-				result = result.add((new BigDecimal(item.getRating()).subtract(userAverageRating)).pow(2));
-			}
-		}
-		
-		return BigDecimal.valueOf(Math.sqrt(result.doubleValue()));
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class PropertiesLoader {
 			return properties;
 		} 
 		catch (IOException e) {
-			log.severe(MessageBundle.ERROR_LOADING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
+			log.severe(String.format(MessageBundle.ERROR_LOADING_PROPERTIES, StackTraceUtils.getStackTraceAsString(e)));
 		} 
 		finally {
 			closeInputResource(input);
@@ -48,7 +48,7 @@ public class PropertiesLoader {
 				input.close();
 			} 
 			catch (IOException e) {
-				log.severe(MessageBundle.ERROR_CLOSING_PROPERTIES + StackTraceUtils.getStackTraceAsString(e));
+				log.severe(String.format(MessageBundle.ERROR_CLOSING_PROPERTIES, StackTraceUtils.getStackTraceAsString(e)));
 			}
 		}
 	}

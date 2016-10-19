@@ -59,9 +59,15 @@ public class ItemRatingService {
 	private String buildRatingDetails(String userName, String itemName, List<User> users, User user) {
 		StringBuilder ratingDetails = new StringBuilder();
 		
-		buildTotalRatingDetails(itemName, users, ratingDetails);
-		buildValidRatingsDetails(userName, user, ratingDetails);
-		buildUsersSimilarityDetails(itemName, users, user, ratingDetails);
+		ratingDetails.append(String.format(MessageBundle.TOTAL_RATINGS_FOR_ITEM_MESSAGE, 
+				 			 itemName, getTotalRatingForItem(users, itemName)));
+		
+		ratingDetails.append(String.format(MessageBundle.TOTAL_ITEMS_RATED_BY_USER_MESSAGE, 
+										   userName, user.getTotalValidRatings()));
+		
+		ratingDetails.append(String.format(MessageBundle.TOTAL_SIMILAR_USERS_MESSAGE, 
+				 			 user.getName(), itemName, getTotalUsersSimilarityForItem(users, user, itemName)));
+		
 		buildPredictionsDetails(user, itemName, users, ratingDetails);
 		
 		return ratingDetails.toString();
@@ -78,23 +84,9 @@ public class ItemRatingService {
 					 			 ratingPredictionStrategy.predictRating(users, user, itemName)));
 		}
 		catch (InvalidPredictionStrategyException e) {
-			log.severe(MessageBundle.ERROR_PREDICTING_MESSAGE + StackTraceUtils.getStackTraceAsString(e));
+			log.severe(String.format(MessageBundle.ERROR_PREDICTING_MESSAGE, StackTraceUtils.getStackTraceAsString(e)));
 			ratingDetails.append(String.format(MessageBundle.COULD_NOT_PREDICT_MESSAGE, itemName));
 		}
-	}
-
-	private void buildUsersSimilarityDetails(String itemName, List<User> users, User user, StringBuilder ratingDetails) {
-		ratingDetails.append(String.format(MessageBundle.TOTAL_SIMILAR_USERS_MESSAGE, 
-							 user.getName(), itemName, getTotalUsersSimilarityForItem(users, user, itemName)));
-	}
-
-	private void buildValidRatingsDetails(String userName, User user, StringBuilder ratingDetails) {
-		ratingDetails.append(String.format(MessageBundle.TOTAL_ITEMS_RATED_BY_USER_MESSAGE, userName, user.getTotalValidRatings()));
-	}
-
-	private void buildTotalRatingDetails(String itemName, List<User> users, StringBuilder ratingDetails) {
-		ratingDetails.append(String.format(MessageBundle.TOTAL_RATINGS_FOR_ITEM_MESSAGE, 
-							 itemName, getTotalRatingForItem(users, itemName)));
 	}
 
 	private Integer getTotalUsersSimilarityForItem(List<User> users, User user, String itemName) {
