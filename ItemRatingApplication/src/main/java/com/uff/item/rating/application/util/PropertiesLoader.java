@@ -11,8 +11,6 @@ import com.uff.item.rating.application.bundle.MessageBundle;
 public class PropertiesLoader {
 	
 	protected static final String DATASOURCE_ATTRIBUTE = "dataSource.url";
-	protected static final String DATASOURCE_TEST_ATTRIBUTE = "dataSource.url.test";
-	protected static final String DATASOURCE_TEST_FLAG_ATTRIBUTE = "application.test";
 	
 	private static final Logger log = Logger.getLogger(PropertiesLoader.class.getName());
 	
